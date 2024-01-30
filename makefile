@@ -4,9 +4,12 @@ CFLAGS=-Wall -g -c
 
 BIN=nhnt
 
-nhnt: main.o
+$(BIN): main.o
 	$(CC) $^ $(LFLAGS) -o $@
 
 main.o: main.c
 	$(CC) $(CFLAGS) $^
 
+clean:
+	@rm *.o
+	@rm $(BIN)
