@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <ncurses.h>
+
+#include "nhnt.h"
 
 int
 init_curses(void)
@@ -23,13 +24,17 @@ int
 main(int argc, char *argv[])
 {
 	// nCurses init
-    init_curses();
+    /* init_curses(); */
 
-	printw("Hello World!");
-	refresh();
-	getch();
+	/* printw("Hello World!"); */
+	/* refresh(); */
+	/* getch(); */
 
-    cleanup_curses();
+    /* cleanup_curses(); */
+
+    NT_DATA *data = nt_create("bridgerspc");
+    nt_data_print(data);
+    nt_destroy(data);
 
 	return EXIT_SUCCESS;
 }

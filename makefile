@@ -4,11 +4,14 @@ CFLAGS=-Wall -g -c
 
 BIN=nhnt
 
-$(BIN): main.o
+$(BIN): main.o data.o
 	$(CC) $^ $(LFLAGS) -o $@
 
-main.o: main.c
-	$(CC) $(CFLAGS) $^
+main.o: main.c nhnt.h
+	$(CC) $(CFLAGS) $<
+
+data.o: data.c nhnt.h
+	$(CC) $(CFLAGS) $<
 
 clean:
 	@rm *.o
