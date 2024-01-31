@@ -3,6 +3,11 @@
 
 #include <stdint.h>
 #include <ncurses.h>
+#include <panel.h>
+
+/*------------*/
+/* BEGIN DATA */
+/*------------*/
 
 typedef struct {
     char *plr_name;
@@ -58,5 +63,43 @@ uint8_t nt_divine_protection_set(NT_DATA *data, uint16_t num);
 uint8_t nt_last_turn_prayed_set(NT_DATA *data, uint32_t num);
 
 uint8_t nt_data_print(NT_DATA *data);
+
+/*------------*/
+/*  END DATA  */
+/*------------*/
+
+/*------------*/
+/*  BEGIN UI  */
+/*------------*/
+
+typedef struct {
+    NT_DATA *data;
+    PANEL *P_main;
+    PANEL *P_help;
+    WINDOW *W_main;
+    WINDOW *W_help;
+    uint32_t main_y;
+    uint32_t main_x;
+    uint32_t help_y;
+    uint32_t help_x;
+    uint32_t help_height;
+    uint32_t help_width;
+    uint32_t main_height;
+    uint32_t main_width;
+} NT_UI;
+
+NT_UI* nt_ui_create(NT_DATA *data);
+uint8_t nt_ui_destroy(NT_UI *ui);
+uint8_t nt_ui_data_draw(NT_UI *ui);
+uint8_t nt_ui_draw_list(WINDOW *win, uint32_t y, uint32_t x, char *text, uint32_t has, char letter);
+
+uint8_t init_curses(void);
+uint8_t cleanup_curses(void);
+
+/*------------*/
+/*   END UI   */
+/*------------*/
+
+
 
 #endif /* HEADER_NHNT_INCLUDED */
