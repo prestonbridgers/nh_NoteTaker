@@ -123,3 +123,65 @@ nt_ui_data_draw(NT_UI *ui)
 
     return EXIT_SUCCESS;
 }
+
+uint8_t
+nt_ui_interact_loop(NT_UI *ui) {
+    uint8_t input;
+    uint8_t is_running = 1;
+
+    // Initial render
+    nt_ui_data_draw(ui);
+
+    while (is_running) {
+        input = getch();
+        switch (input) {
+            case 't':
+                nt_ui_toggle_resistance(ui, getch());
+                break;
+            case 'q':
+                is_running = 0;
+                break;
+            default:
+                break;
+        }
+        nt_ui_data_draw(ui);
+    }
+    return EXIT_SUCCESS;
+}
+
+uint8_t
+nt_ui_toggle_resistance(NT_UI *ui, char res)
+{
+    switch (res) {
+        case 'p':
+            nt_poison_toggle(ui->data);
+            break;
+        case 'c':
+            nt_cold_toggle(ui->data);
+            break;
+        case 'd':
+            nt_disintegration_toggle(ui->data);
+            break;
+        case 's':
+            nt_shock_toggle(ui->data);
+            break;
+        case 'l':
+            nt_sleep_toggle(ui->data);
+            break;
+        case 'm':
+            nt_magic_toggle(ui->data);
+            break;
+        case 'f':
+            nt_fire_toggle(ui->data);
+            break;
+        default:
+            break;
+    }
+    return EXIT_SUCCESS;
+}
+
+
+
+
+
+
