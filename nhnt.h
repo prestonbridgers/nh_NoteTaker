@@ -47,6 +47,7 @@ uint8_t nt_poison_toggle(NT_DATA *data);
 uint8_t nt_sleep_toggle(NT_DATA *data);
 uint8_t nt_disintegration_toggle(NT_DATA *data);
 uint8_t nt_magic_toggle(NT_DATA *data);
+
 uint8_t nt_infravision_toggle(NT_DATA *data);
 uint8_t nt_invisibility_toggle(NT_DATA *data);
 uint8_t nt_reflection_toggle(NT_DATA *data);
@@ -89,12 +90,17 @@ typedef struct {
     uint32_t help_y;
     uint32_t help_x;
     // Resistances SubWindow
-    PANEL *P_resistances;
     WINDOW *W_resistances;
     uint32_t resistances_height;
     uint32_t resistances_width;
     uint32_t resistances_y;
     uint32_t resistances_x;
+    // Abilities SubWindow
+    WINDOW *W_abilities;
+    uint32_t abilities_height;
+    uint32_t abilities_width;
+    uint32_t abilities_y;
+    uint32_t abilities_x;
 } NT_UI;
 
 NT_UI* nt_ui_create(NT_DATA *data);
@@ -108,6 +114,7 @@ uint8_t nt_ui_draw_title(WINDOW *win, uint32_t win_width, char *text,
     size_t len);
 uint8_t nt_ui_draw_main_title(NT_UI *ui);
 uint8_t nt_ui_draw_main_hints(NT_UI *ui, char *text, size_t len);
+uint8_t nt_ui_toggle_ability(NT_UI *ui, char abil);
 
 uint8_t init_curses(void);
 uint8_t cleanup_curses(void);

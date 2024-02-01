@@ -190,7 +190,7 @@ nt_speed2_toggle(NT_DATA *data)
     if (data == NULL || !data->has_speed1) {
         return EXIT_FAILURE;
     }
-    data->has_speed2 = !data->has_speed1;
+    data->has_speed2 = !data->has_speed2;
     return EXIT_SUCCESS;
 }
 

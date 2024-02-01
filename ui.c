@@ -59,6 +59,17 @@ nt_ui_create(NT_DATA *data)
         ui->resistances_y, ui->resistances_x
     );
 
+    // Abilities Window Initialization
+    ui->abilities_height = (ui->main_height - 8) / 2;
+    ui->abilities_width = ui->main_width / 6;
+    ui->abilities_y = (ui->main_height - ui->abilities_height) / 2 - 8 + ui->abilities_height;
+    ui->abilities_x = 4;
+    ui->W_abilities = derwin(
+        ui->W_main,
+        ui->abilities_height, ui->abilities_width,
+        ui->abilities_y, ui->abilities_x
+    );
+
     // Panel Creation
     ui->P_help = new_panel(ui->W_help);
     ui->P_main = new_panel(ui->W_main);
@@ -136,8 +147,8 @@ nt_ui_draw_main_hints(NT_UI *ui, char *text, size_t len)
 
     if (text == NULL) {
         mvwprintw(ui->W_main, ui->main_height - 2,
-            (ui->main_width - 34) / 2,
-            "t - toggle resistance  |  q - quit");
+            (ui->main_width - 55) / 2,
+            "r - toggle resistance  | a - toggle ability |  q - quit");
     } else {
         mvwprintw(ui->W_main, ui->main_height - 2,
             (ui->main_width - len) / 2,
@@ -157,6 +168,7 @@ nt_ui_data_draw(NT_UI *ui)
     box(ui->W_main, ACS_VLINE, ACS_HLINE);
     box(ui->W_help, ACS_VLINE, ACS_HLINE);
     box(ui->W_resistances, ACS_VLINE, ACS_HLINE);
+    box(ui->W_abilities, ACS_VLINE, ACS_HLINE);
 
     nt_ui_draw_main_title(ui);
     nt_ui_draw_main_hints(ui, NULL, 0);
@@ -187,6 +199,47 @@ nt_ui_data_draw(NT_UI *ui)
         ui->data->has_magic_resistance,
         'm');
 
+    // Drawing Ability State
+    nt_ui_draw_title(
+        ui->W_abilities, ui->abilities_width,
+        "Abilities", 9);
+    nt_ui_draw_list(ui->W_abilities, list_y + 1, list_x, "Infravision",
+        ui->data->has_infravision,
+        'a');
+    nt_ui_draw_list(ui->W_abilities, list_y + 2, list_x, "Invisibility",
+        ui->data->has_invisibility,
+        'b');
+    nt_ui_draw_list(ui->W_abilities, list_y + 3, list_x, "Reflection",
+        ui->data->has_reflection,
+        'c');
+    nt_ui_draw_list(ui->W_abilities, list_y + 4, list_x, "Searching",
+        ui->data->has_searching,
+        'd');
+    nt_ui_draw_list(ui->W_abilities, list_y + 5, list_x, "See Invisible",
+        ui->data->has_see_invisible,
+        'e');
+    nt_ui_draw_list(ui->W_abilities, list_y + 6, list_x, "See Speed 1",
+        ui->data->has_speed1,
+        'f');
+    nt_ui_draw_list(ui->W_abilities, list_y + 7, list_x, "See Speed 2",
+        ui->data->has_speed2,
+        'g');
+    nt_ui_draw_list(ui->W_abilities, list_y + 8, list_x, "Stealth",
+        ui->data->has_stealth,
+        'h');
+    nt_ui_draw_list(ui->W_abilities, list_y + 9, list_x, "Telepathy",
+        ui->data->has_telepathy,
+        'i');
+    nt_ui_draw_list(ui->W_abilities, list_y + 10, list_x, "Teleport Control",
+        ui->data->has_teleport_control,
+        'j');
+    nt_ui_draw_list(ui->W_abilities, list_y + 11, list_x, "Teleportitis",
+        ui->data->has_teleportitis,
+        'k');
+    nt_ui_draw_list(ui->W_abilities, list_y + 12, list_x, "Warning",
+        ui->data->has_warning,
+        'l');
+
     update_panels();
     doupdate();
 
@@ -204,14 +257,21 @@ nt_ui_interact_loop(NT_UI *ui) {
     while (is_running) {
         input = getch();
         switch (input) {
-            case 't':
+            case 'r':
                 nt_ui_draw_main_hints(ui,
                     "Toggling Resistance: Choose a resistance",
                     40);
-
-                    update_panels();
-                    doupdate();
+                update_panels();
+                doupdate();
                 nt_ui_toggle_resistance(ui, getch());
+                break;
+            case 'a':
+                nt_ui_draw_main_hints(ui,
+                    "Toggling Ability: Choose an ability",
+                    35);
+                update_panels();
+                doupdate();
+                nt_ui_toggle_ability(ui, getch());
                 break;
             case 'q':
                 is_running = 0;
@@ -225,9 +285,9 @@ nt_ui_interact_loop(NT_UI *ui) {
 }
 
 uint8_t
-nt_ui_toggle_resistance(NT_UI *ui, char res)
+nt_ui_toggle_resistance(NT_UI *ui, char abil)
 {
-    switch (res) {
+    switch (abil) {
         case 'p':
             nt_poison_toggle(ui->data);
             break;
@@ -248,6 +308,53 @@ nt_ui_toggle_resistance(NT_UI *ui, char res)
             break;
         case 'f':
             nt_fire_toggle(ui->data);
+            break;
+        default:
+            break;
+    }
+
+    return EXIT_SUCCESS;
+}
+
+uint8_t
+nt_ui_toggle_ability(NT_UI *ui, char res)
+{
+    switch (res) {
+        case 'a':
+            nt_infravision_toggle(ui->data);
+            break;
+        case 'b':
+            nt_invisibility_toggle(ui->data);
+            break;
+        case 'c':
+            nt_reflection_toggle(ui->data);
+            break;
+        case 'd':
+            nt_searching_toggle(ui->data);
+            break;
+        case 'e':
+            nt_see_invisible_toggle(ui->data);
+            break;
+        case 'f':
+            nt_speed1_toggle(ui->data);
+            break;
+        case 'g':
+            nt_speed2_toggle(ui->data);
+            break;
+        case 'h':
+            nt_stealth_toggle(ui->data);
+            break;
+        case 'i':
+            nt_telepathy_toggle(ui->data);
+            break;
+        case 'j':
+            nt_teleport_control_toggle(ui->data);
+            break;
+        case 'k':
+            nt_teleportitis_toggle(ui->data);
+            break;
+        case 'l':
+            nt_warning_toggle(ui->data);
             break;
         default:
             break;
