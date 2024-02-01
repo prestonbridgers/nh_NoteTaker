@@ -48,6 +48,17 @@ nt_ui_create(NT_DATA *data)
         ui->help_y, ui->help_x
     );
 
+    // Resistances Window Initialization
+    ui->resistances_height = ui->main_height - 8;
+    ui->resistances_width = ui->main_width / 6;
+    ui->resistances_y = (ui->main_height - ui->resistances_height) / 2;
+    ui->resistances_x = 4;
+    ui->W_resistances = derwin(
+        ui->W_main,
+        ui->resistances_height, ui->resistances_width,
+        ui->resistances_y, ui->resistances_x
+    );
+
     // Panel Creation
     ui->P_help = new_panel(ui->W_help);
     ui->P_main = new_panel(ui->W_main);
@@ -64,6 +75,17 @@ nt_ui_destroy(NT_UI *ui)
     delwin(ui->W_main);
     delwin(ui->W_help);
     free(ui);
+    return EXIT_SUCCESS;
+}
+
+uint8_t
+nt_ui_draw_title(WINDOW *win, uint32_t win_width, char *text, size_t len)
+{
+    uint16_t title_x = (win_width - len) / 2;
+    uint16_t title_y = 0;
+
+    mvwprintw(win, title_y, title_x, "%s", text);
+
     return EXIT_SUCCESS;
 }
 
@@ -87,34 +109,56 @@ nt_ui_draw_list(WINDOW *win, uint32_t y, uint32_t x, char *text, uint32_t has, c
 }
 
 uint8_t
+nt_ui_draw_main_title(NT_UI *ui)
+{
+    uint32_t col;
+    
+    for (col = 1; col < ui->main_width - 2; col++) {
+        mvwaddch(ui->W_main, 2, col, ACS_HLINE);
+    }
+
+    mvwprintw(ui->W_main, 1, (ui->main_width - 24) / 2,
+        "NetHack NoteTaker v0.1.0");
+
+    return EXIT_SUCCESS;
+}
+
+uint8_t
 nt_ui_data_draw(NT_UI *ui)
 {
-    uint8_t list_y = 4;
-    uint8_t list_x = 4;
+    uint8_t list_y = 1;
+    uint8_t list_x = 2;
 
-    box(ui->W_main, '|', '-');
-    box(ui->W_help, '|', '-');
+    // Draw boxes first so nothing overlaps them
+    box(ui->W_main, ACS_VLINE, ACS_HLINE);
+    box(ui->W_help, ACS_VLINE, ACS_HLINE);
+    box(ui->W_resistances, ACS_VLINE, ACS_HLINE);
 
-    mvwprintw(ui->W_main, list_y, list_x - 2, "Resistances:");
-    nt_ui_draw_list(ui->W_main, list_y + 1, list_x, "Shock",
+    nt_ui_draw_main_title(ui);
+
+    // Drawing Resistances State
+    nt_ui_draw_title(
+        ui->W_resistances, ui->resistances_width,
+        "Resistances", 11);
+    nt_ui_draw_list(ui->W_resistances, list_y + 1, list_x, "Shock",
         ui->data->has_shock_resistance,
         's');
-    nt_ui_draw_list(ui->W_main, list_y + 2, list_x, "Fire",
+    nt_ui_draw_list(ui->W_resistances, list_y + 2, list_x, "Fire",
         ui->data->has_fire_resistance,
         'f');
-    nt_ui_draw_list(ui->W_main, list_y + 3, list_x, "Cold",
+    nt_ui_draw_list(ui->W_resistances, list_y + 3, list_x, "Cold",
         ui->data->has_cold_resistance,
         'c');
-    nt_ui_draw_list(ui->W_main, list_y + 4, list_x, "Poison",
+    nt_ui_draw_list(ui->W_resistances, list_y + 4, list_x, "Poison",
         ui->data->has_poison_resistance,
         'p');
-    nt_ui_draw_list(ui->W_main, list_y + 5, list_x, "Sleep",
+    nt_ui_draw_list(ui->W_resistances, list_y + 5, list_x, "Sleep",
         ui->data->has_sleep_resistance,
         'l');
-    nt_ui_draw_list(ui->W_main, list_y + 6, list_x, "Disintegration",
+    nt_ui_draw_list(ui->W_resistances, list_y + 6, list_x, "Disintegration",
         ui->data->has_disintegration_resistance,
         'd');
-    nt_ui_draw_list(ui->W_main, list_y + 7, list_x, "Magic",
+    nt_ui_draw_list(ui->W_resistances, list_y + 7, list_x, "Magic",
         ui->data->has_magic_resistance,
         'm');
 

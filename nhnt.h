@@ -74,26 +74,39 @@ uint8_t nt_data_print(NT_DATA *data);
 
 typedef struct {
     NT_DATA *data;
+    // Main Window
     PANEL *P_main;
-    PANEL *P_help;
     WINDOW *W_main;
-    WINDOW *W_help;
-    uint32_t main_y;
-    uint32_t main_x;
-    uint32_t help_y;
-    uint32_t help_x;
-    uint32_t help_height;
-    uint32_t help_width;
     uint32_t main_height;
     uint32_t main_width;
+    uint32_t main_y;
+    uint32_t main_x;
+    // Help Window
+    PANEL *P_help;
+    WINDOW *W_help;
+    uint32_t help_height;
+    uint32_t help_width;
+    uint32_t help_y;
+    uint32_t help_x;
+    // Resistances SubWindow
+    PANEL *P_resistances;
+    WINDOW *W_resistances;
+    uint32_t resistances_height;
+    uint32_t resistances_width;
+    uint32_t resistances_y;
+    uint32_t resistances_x;
 } NT_UI;
 
 NT_UI* nt_ui_create(NT_DATA *data);
 uint8_t nt_ui_destroy(NT_UI *ui);
 uint8_t nt_ui_data_draw(NT_UI *ui);
-uint8_t nt_ui_draw_list(WINDOW *win, uint32_t y, uint32_t x, char *text, uint32_t has, char letter);
+uint8_t nt_ui_draw_list(WINDOW *win, uint32_t y, uint32_t x, char *text,
+    uint32_t has, char letter);
 uint8_t nt_ui_interact_loop(NT_UI *ui);
 uint8_t nt_ui_toggle_resistance(NT_UI *ui, char res);
+uint8_t nt_ui_draw_title(WINDOW *win, uint32_t win_width, char *text,
+    size_t len);
+uint8_t nt_ui_draw_main_title(NT_UI *ui);
 
 uint8_t init_curses(void);
 uint8_t cleanup_curses(void);
