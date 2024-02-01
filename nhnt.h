@@ -107,6 +107,7 @@ uint8_t nt_ui_toggle_resistance(NT_UI *ui, char res);
 uint8_t nt_ui_draw_title(WINDOW *win, uint32_t win_width, char *text,
     size_t len);
 uint8_t nt_ui_draw_main_title(NT_UI *ui);
+uint8_t nt_ui_draw_main_hints(NT_UI *ui, char *text, size_t len);
 
 uint8_t init_curses(void);
 uint8_t cleanup_curses(void);

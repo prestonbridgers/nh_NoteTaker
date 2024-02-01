@@ -90,7 +90,8 @@ nt_ui_draw_title(WINDOW *win, uint32_t win_width, char *text, size_t len)
 }
 
 uint8_t
-nt_ui_draw_list(WINDOW *win, uint32_t y, uint32_t x, char *text, uint32_t has, char letter)
+nt_ui_draw_list(WINDOW *win, uint32_t y, uint32_t x, char *text, uint32_t has,
+    char letter)
 {
     char buffer[256];
 
@@ -130,6 +131,7 @@ nt_ui_draw_main_hints(NT_UI *ui, char *text, size_t len)
     
     for (col = 1; col < ui->main_width - 2; col++) {
         mvwaddch(ui->W_main, ui->main_height - 3, col, ACS_HLINE);
+        mvwaddch(ui->W_main, ui->main_height - 2, col, ' ');
     }
 
     if (text == NULL) {
@@ -203,6 +205,12 @@ nt_ui_interact_loop(NT_UI *ui) {
         input = getch();
         switch (input) {
             case 't':
+                nt_ui_draw_main_hints(ui,
+                    "Toggling Resistance: Choose a resistance",
+                    40);
+
+                    update_panels();
+                    doupdate();
                 nt_ui_toggle_resistance(ui, getch());
                 break;
             case 'q':
