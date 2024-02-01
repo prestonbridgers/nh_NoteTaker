@@ -5,6 +5,10 @@
 #include <ncurses.h>
 #include <panel.h>
 
+#define COLOR_RESISTANCES 1
+#define COLOR_ABILITIES 2
+#define COLOR_MAIN_TITLE 3
+
 /*------------*/
 /* BEGIN DATA */
 /*------------*/
@@ -111,7 +115,7 @@ uint8_t nt_ui_draw_list(WINDOW *win, uint32_t y, uint32_t x, char *text,
 uint8_t nt_ui_interact_loop(NT_UI *ui);
 uint8_t nt_ui_toggle_resistance(NT_UI *ui, char res);
 uint8_t nt_ui_draw_title(WINDOW *win, uint32_t win_width, char *text,
-    size_t len);
+    size_t len, int color);
 uint8_t nt_ui_draw_main_title(NT_UI *ui);
 uint8_t nt_ui_draw_main_hints(NT_UI *ui, char *text, size_t len);
 uint8_t nt_ui_toggle_ability(NT_UI *ui, char abil);
