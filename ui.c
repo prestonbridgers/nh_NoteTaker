@@ -124,6 +124,28 @@ nt_ui_draw_main_title(NT_UI *ui)
 }
 
 uint8_t
+nt_ui_draw_main_hints(NT_UI *ui, char *text, size_t len)
+{
+    uint32_t col;
+    
+    for (col = 1; col < ui->main_width - 2; col++) {
+        mvwaddch(ui->W_main, ui->main_height - 3, col, ACS_HLINE);
+    }
+
+    if (text == NULL) {
+        mvwprintw(ui->W_main, ui->main_height - 2,
+            (ui->main_width - 34) / 2,
+            "t - toggle resistance  |  q - quit");
+    } else {
+        mvwprintw(ui->W_main, ui->main_height - 2,
+            (ui->main_width - len) / 2,
+            "%s", text);
+    }
+
+    return EXIT_SUCCESS;
+}
+
+uint8_t
 nt_ui_data_draw(NT_UI *ui)
 {
     uint8_t list_y = 1;
@@ -135,6 +157,7 @@ nt_ui_data_draw(NT_UI *ui)
     box(ui->W_resistances, ACS_VLINE, ACS_HLINE);
 
     nt_ui_draw_main_title(ui);
+    nt_ui_draw_main_hints(ui, NULL, 0);
 
     // Drawing Resistances State
     nt_ui_draw_title(
