@@ -47,7 +47,47 @@ nt_destroy(NT_DATA *data)
     return EXIT_SUCCESS;
 }
 
+uint8_t
+nt_data_serialize(NT_DATA *data)
+{
+    FILE *f;
+    char filename[256];
 
+    snprintf(filename, 256, "%s.txt", data->plr_name);
+    f = fopen(filename, "w");
+
+    fprintf(f, "%s|%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d|%d|%d\n",
+        data->plr_name,
+        data->has_fire_resistance,
+        data->has_cold_resistance,
+        data->has_poison_resistance,
+        data->has_sleep_resistance,
+        data->has_disintegration_resistance,
+        data->has_magic_resistance,
+        data->has_infravision,
+        data->has_invisibility,
+        data->has_reflection,
+        data->has_searching,
+        data->has_see_invisible,
+        data->has_speed1,
+        data->has_speed2,
+        data->has_stealth,
+        data->has_telepathy,
+        data->has_teleport_control,
+        data->has_teleportitis,
+        data->has_warning,
+        data->divine_protection,
+        data->last_turn_prayed);
+
+    fclose(f);
+    return EXIT_SUCCESS;
+}
+
+NT_DATA*
+nt_data_load(NT_DATA *data)
+{
+    return NULL;
+}
 
 uint8_t
 nt_shock_toggle(NT_DATA *data)

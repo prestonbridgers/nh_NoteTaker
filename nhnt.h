@@ -42,7 +42,10 @@ typedef struct {
 } NT_DATA;
 
 NT_DATA* nt_create(char *plr_name);
-uint8_t  nt_destroy(NT_DATA *data);
+uint8_t nt_destroy(NT_DATA *data);
+
+uint8_t nt_data_serialize(NT_DATA *data);
+NT_DATA* nt_data_load(NT_DATA *data);
 
 uint8_t nt_shock_toggle(NT_DATA *data);
 uint8_t nt_fire_toggle(NT_DATA *data);

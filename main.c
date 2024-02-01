@@ -21,6 +21,8 @@ main(int argc, char *argv[])
     
     nt_ui_interact_loop(ui);
 
+    nt_data_serialize(ui->data);
+
     nt_ui_destroy(ui);
     cleanup_curses();
 	return EXIT_SUCCESS;
