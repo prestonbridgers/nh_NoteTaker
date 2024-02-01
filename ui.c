@@ -225,10 +225,10 @@ nt_ui_data_draw(NT_UI *ui)
     nt_ui_draw_list(ui->W_abilities, list_y + 5, list_x, "See Invisible",
         ui->data->has_see_invisible,
         'e');
-    nt_ui_draw_list(ui->W_abilities, list_y + 6, list_x, "See Speed 1",
+    nt_ui_draw_list(ui->W_abilities, list_y + 6, list_x, "Speed 1",
         ui->data->has_speed1,
         'f');
-    nt_ui_draw_list(ui->W_abilities, list_y + 7, list_x, "See Speed 2",
+    nt_ui_draw_list(ui->W_abilities, list_y + 7, list_x, "Speed 2",
         ui->data->has_speed2,
         'g');
     nt_ui_draw_list(ui->W_abilities, list_y + 8, list_x, "Stealth",
