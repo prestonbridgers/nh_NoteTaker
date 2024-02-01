@@ -12,8 +12,11 @@ init_curses(void)
         fprintf(stderr, "Terminal does not support colors. Exiting...\n");
         exit(1);
     }
-
     start_color();
+    init_pair(COLOR_RESISTANCES, COLOR_RED, COLOR_BLACK);
+    init_pair(COLOR_ABILITIES, COLOR_BLUE, COLOR_BLACK);
+    init_pair(COLOR_MAIN_TITLE, COLOR_GREEN, COLOR_BLACK);
+
     raw();
     noecho();
     curs_set(0);
@@ -97,12 +100,15 @@ nt_ui_destroy(NT_UI *ui)
 }
 
 uint8_t
-nt_ui_draw_title(WINDOW *win, uint32_t win_width, char *text, size_t len)
+nt_ui_draw_title(WINDOW *win, uint32_t win_width, char *text, size_t len,
+    int color)
 {
     uint16_t title_x = (win_width - len) / 2;
     uint16_t title_y = 0;
 
+    wattron(win, COLOR_PAIR(color));
     mvwprintw(win, title_y, title_x, "%s", text);
+    wattroff(win, COLOR_PAIR(color));
 
     return EXIT_SUCCESS;
 }
@@ -136,8 +142,10 @@ nt_ui_draw_main_title(NT_UI *ui)
         mvwaddch(ui->W_main, 2, col, ACS_HLINE);
     }
 
+    wattron(ui->W_main, COLOR_PAIR(COLOR_MAIN_TITLE));
     mvwprintw(ui->W_main, 1, (ui->main_width - 24) / 2,
         "NetHack NoteTaker v0.1.0");
+    wattroff(ui->W_main, COLOR_PAIR(COLOR_MAIN_TITLE));
 
     return EXIT_SUCCESS;
 }
@@ -174,8 +182,14 @@ nt_ui_data_draw(NT_UI *ui)
     // Draw boxes first so nothing overlaps them
     box(ui->W_main, ACS_VLINE, ACS_HLINE);
     box(ui->W_help, ACS_VLINE, ACS_HLINE);
+
+    wattron(ui->W_resistances, COLOR_PAIR(COLOR_RESISTANCES));
     box(ui->W_resistances, ACS_VLINE, ACS_HLINE);
+    wattroff(ui->W_resistances, COLOR_PAIR(COLOR_RESISTANCES));
+
+    wattron(ui->W_abilities, COLOR_PAIR(COLOR_ABILITIES));
     box(ui->W_abilities, ACS_VLINE, ACS_HLINE);
+    wattroff(ui->W_abilities, COLOR_PAIR(COLOR_ABILITIES));
 
     nt_ui_draw_main_title(ui);
     nt_ui_draw_main_hints(ui, NULL, 0);
@@ -183,7 +197,7 @@ nt_ui_data_draw(NT_UI *ui)
     // Drawing Resistances State
     nt_ui_draw_title(
         ui->W_resistances, ui->resistances_width,
-        "Resistances", 11);
+        "Resistances", 11, COLOR_RESISTANCES);
     nt_ui_draw_list(ui->W_resistances, list_y + 1, list_x, "Shock",
         ui->data->has_shock_resistance,
         's');
@@ -209,7 +223,7 @@ nt_ui_data_draw(NT_UI *ui)
     // Drawing Ability State
     nt_ui_draw_title(
         ui->W_abilities, ui->abilities_width,
-        "Abilities", 9);
+        "Abilities", 9, COLOR_ABILITIES);
     nt_ui_draw_list(ui->W_abilities, list_y + 1, list_x, "Infravision",
         ui->data->has_infravision,
         'a');
