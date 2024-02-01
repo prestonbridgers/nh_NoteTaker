@@ -7,6 +7,13 @@ uint8_t
 init_curses(void)
 {
 	initscr();
+    if (has_colors() == FALSE) {
+        endwin();
+        fprintf(stderr, "Terminal does not support colors. Exiting...\n");
+        exit(1);
+    }
+
+    start_color();
     raw();
     noecho();
     curs_set(0);
