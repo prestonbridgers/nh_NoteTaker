@@ -49,9 +49,9 @@ nt_ui_create(NT_DATA *data)
     );
 
     // Resistances Window Initialization
-    ui->resistances_height = ui->main_height - 8;
+    ui->resistances_height = (ui->main_height - 8) / 2;
     ui->resistances_width = ui->main_width / 6;
-    ui->resistances_y = (ui->main_height - ui->resistances_height) / 2;
+    ui->resistances_y = (ui->main_height - ui->resistances_height) / 2 - 8;
     ui->resistances_x = 4;
     ui->W_resistances = derwin(
         ui->W_main,
