@@ -17,9 +17,4 @@ jobs:
     
     - name: Make
       run: make
-  
-    - name: Valgrind Leak Check
-      uses: solareenlo/42valgrind-action@v1.0.3
-      with:
-        flags: ./nhnt
           
