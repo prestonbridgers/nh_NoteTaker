@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <ncurses.h>
+#include <string.h>
 #include <panel.h>
 
 #define COLOR_RESISTANCES 1
@@ -45,7 +46,7 @@ NT_DATA* nt_create(char *plr_name);
 uint8_t nt_destroy(NT_DATA *data);
 
 uint8_t nt_data_serialize(NT_DATA *data);
-NT_DATA* nt_data_load(NT_DATA *data);
+NT_DATA* nt_data_load(NT_DATA *data, char *filename);
 
 uint8_t nt_shock_toggle(NT_DATA *data);
 uint8_t nt_fire_toggle(NT_DATA *data);

@@ -56,14 +56,17 @@ nt_data_serialize(NT_DATA *data)
     snprintf(filename, 256, "%s.txt", data->plr_name);
     f = fopen(filename, "w");
 
-    fprintf(f, "%s|%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d|%d|%d\n",
-        data->plr_name,
+    fprintf(f, "%s|%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d|%d|%d\n",
+        data->plr_name, //19
+        
+        data->has_shock_resistance,
         data->has_fire_resistance,
         data->has_cold_resistance,
         data->has_poison_resistance,
         data->has_sleep_resistance,
         data->has_disintegration_resistance,
         data->has_magic_resistance,
+
         data->has_infravision,
         data->has_invisibility,
         data->has_reflection,
@@ -76,6 +79,7 @@ nt_data_serialize(NT_DATA *data)
         data->has_teleport_control,
         data->has_teleportitis,
         data->has_warning,
+
         data->divine_protection,
         data->last_turn_prayed);
 
@@ -84,8 +88,55 @@ nt_data_serialize(NT_DATA *data)
 }
 
 NT_DATA*
-nt_data_load(NT_DATA *data)
+nt_data_load(NT_DATA *data, char *filename)
 {
+    FILE *f;
+    char data_str[1024];
+    char *token;
+    uint32_t i;
+
+    f = fopen(filename, "r");
+
+    fgets(data_str, 1024, f);
+
+    // Name
+    token = strtok(data_str, "|");
+    data->plr_name = calloc(64, sizeof *data->plr_name);
+    strncpy(data->plr_name, token, 64);
+
+    // Resistances & Abilities
+    token = strtok(NULL, "|");
+    i = 0;
+    fprintf(stderr, "%s\n", token);
+    if (token[i] == '1') { data->has_shock_resistance = 1; } i++;
+    if (token[i] == '1') { data->has_fire_resistance = 1; } i++;
+    if (token[i] == '1') { data->has_cold_resistance = 1; } i++;
+    if (token[i] == '1') { data->has_poison_resistance = 1; } i++;
+    if (token[i] == '1') { data->has_sleep_resistance = 1; } i++;
+    if (token[i] == '1') { data->has_disintegration_resistance = 1; } i++;
+    if (token[i] == '1') { data->has_magic_resistance = 1; } i++;
+    if (token[i] == '1') { data->has_infravision = 1; } i++;
+    if (token[i] == '1') { data->has_invisibility = 1; } i++;
+    if (token[i] == '1') { data->has_reflection = 1; } i++;
+    if (token[i] == '1') { data->has_searching = 1; } i++;
+    if (token[i] == '1') { data->has_see_invisible = 1; } i++;
+    if (token[i] == '1') { data->has_speed1 = 1; } i++;
+    if (token[i] == '1') { data->has_speed2 = 1; } i++;
+    if (token[i] == '1') { data->has_stealth = 1; } i++;
+    if (token[i] == '1') { data->has_telepathy = 1; } i++;
+    if (token[i] == '1') { data->has_teleport_control = 1; } i++;
+    if (token[i] == '1') { data->has_teleportitis = 1; } i++;
+    if (token[i] == '1') { data->has_warning = 1; } i++;
+
+    // Divine protection
+    token = strtok(NULL, "|");
+    data->divine_protection = atoi(token);
+
+    // Last turn prayed
+    token = strtok(NULL, "|");
+    data->last_turn_prayed = atoi(token);
+
+    fclose(f);
     return NULL;
 }
 

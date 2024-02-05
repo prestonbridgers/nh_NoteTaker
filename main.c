@@ -18,10 +18,11 @@ main(int argc, char *argv[])
 
     NT_DATA *data = nt_create("bridgerspc");
     NT_UI *ui = nt_ui_create(data);
+    nt_data_load(ui->data, "bridgerspc.txt");
     
     nt_ui_interact_loop(ui);
 
-    nt_data_serialize(ui->data);
+    //nt_data_serialize(ui->data);
 
     nt_ui_destroy(ui);
     cleanup_curses();
