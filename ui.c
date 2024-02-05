@@ -80,6 +80,18 @@ nt_ui_create(NT_DATA *data)
         ui->abilities_y, ui->abilities_x
     );
 
+    // Other Window Initialization
+    ui->other_height = 4;
+    ui->other_width = ui->abilities_width;
+    ui->other_y = ui->resistances_y + ui->resistances_height;
+    ui->other_x = ui->resistances_x;
+    ui->W_other = derwin(
+        ui->W_main,
+        ui->other_height, ui->other_width,
+        ui->other_y, ui->other_x
+    );
+    
+
     // Panel Creation
     ui->P_help = new_panel(ui->W_help);
     ui->P_main = new_panel(ui->W_main);
@@ -124,6 +136,21 @@ nt_ui_draw_list(WINDOW *win, uint32_t y, uint32_t x, char *text, uint32_t has,
     } else {
         snprintf(buffer, 256, "[ ] %c - %s", letter, text);
     }
+
+    mvwprintw(
+        win, y, x,
+        "%s", buffer
+    );
+
+    return EXIT_SUCCESS;
+}
+
+uint8_t
+nt_ui_draw_other(WINDOW *win, uint32_t y, uint32_t x, char *text, uint32_t has,
+    char letter)
+{
+    char buffer[256];
+    snprintf(buffer, 256, "%c - %s %d", letter, text, has);
 
     mvwprintw(
         win, y, x,
@@ -181,7 +208,7 @@ nt_ui_data_draw(NT_UI *ui)
 
     // Draw boxes first so nothing overlaps them
     box(ui->W_main, ACS_VLINE, ACS_HLINE);
-    box(ui->W_help, ACS_VLINE, ACS_HLINE);
+    //box(ui->W_help, ACS_VLINE, ACS_HLINE);
 
     wattron(ui->W_resistances, COLOR_PAIR(COLOR_RESISTANCES));
     box(ui->W_resistances, ACS_VLINE, ACS_HLINE);
@@ -190,6 +217,8 @@ nt_ui_data_draw(NT_UI *ui)
     wattron(ui->W_abilities, COLOR_PAIR(COLOR_ABILITIES));
     box(ui->W_abilities, ACS_VLINE, ACS_HLINE);
     wattroff(ui->W_abilities, COLOR_PAIR(COLOR_ABILITIES));
+
+    box(ui->W_other, ACS_VLINE, ACS_HLINE);
 
     nt_ui_draw_main_title(ui);
     nt_ui_draw_main_hints(ui, NULL, 0);
@@ -260,6 +289,17 @@ nt_ui_data_draw(NT_UI *ui)
     nt_ui_draw_list(ui->W_abilities, list_y + 12, list_x, "Warning",
         ui->data->has_warning,
         'l');
+
+    // Drawing Other State
+    nt_ui_draw_title(
+        ui->W_other, ui->other_width,
+        "Misc.", 5, 0);
+    nt_ui_draw_other(ui->W_other, list_y, list_x, "Protection:",
+        ui->data->divine_protection,
+        'a');
+    nt_ui_draw_other(ui->W_other, list_y + 1, list_x, "Last Prayed On:",
+        ui->data->last_turn_prayed,
+        'b');
 
     update_panels();
     doupdate();

@@ -109,12 +109,20 @@ typedef struct {
     uint32_t abilities_width;
     uint32_t abilities_y;
     uint32_t abilities_x;
+    // Other SubWindow
+    WINDOW *W_other;
+    uint32_t other_height;
+    uint32_t other_width;
+    uint32_t other_y;
+    uint32_t other_x;
 } NT_UI;
 
 NT_UI* nt_ui_create(NT_DATA *data);
 uint8_t nt_ui_destroy(NT_UI *ui);
 uint8_t nt_ui_data_draw(NT_UI *ui);
 uint8_t nt_ui_draw_list(WINDOW *win, uint32_t y, uint32_t x, char *text,
+    uint32_t has, char letter);
+uint8_t nt_ui_draw_other(WINDOW *win, uint32_t y, uint32_t x, char *text,
     uint32_t has, char letter);
 uint8_t nt_ui_interact_loop(NT_UI *ui);
 uint8_t nt_ui_toggle_resistance(NT_UI *ui, char res);
