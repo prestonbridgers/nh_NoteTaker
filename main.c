@@ -19,9 +19,14 @@ main(int argc, char *argv[])
                 name_found = 1;
                 break;
             default:
-                fprintf(stderr, "Usage: -n {character_name}");
+                fprintf(stderr, "Usage: %s -n {character_name}\n", argv[0]);
                 exit(1);
+                break;
         }
+    }
+    if (!name_found) {
+        fprintf(stderr, "Usage: %s -n {character_name}\n", argv[0]);
+        exit(1);
     }
 
 	// nCurses init
