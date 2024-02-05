@@ -12,7 +12,8 @@ NT_DATA*
 nt_create(char *plr_name)
 {
     NT_DATA *d = calloc(1, sizeof *d);
-    d->plr_name = plr_name;
+    d->plr_name = calloc(64, sizeof *d->plr_name);
+    strncpy(d->plr_name, plr_name, 64);
     d->has_shock_resistance = 0;
     d->has_fire_resistance = 0;
     d->has_cold_resistance = 0;
