@@ -115,6 +115,12 @@ typedef struct {
     uint32_t other_width;
     uint32_t other_y;
     uint32_t other_x;
+    // ToDo SubWindow
+    WINDOW *W_todo;
+    uint32_t todo_height;
+    uint32_t todo_width;
+    uint32_t todo_y;
+    uint32_t todo_x;
 } NT_UI;
 
 NT_UI* nt_ui_create(NT_DATA *data);

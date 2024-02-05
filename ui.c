@@ -90,6 +90,17 @@ nt_ui_create(NT_DATA *data)
         ui->other_height, ui->other_width,
         ui->other_y, ui->other_x
     );
+
+    // ToDo Window Initialization
+    ui->todo_height = LINES - 8;
+    ui->todo_width = ui->resistances_width * 5 - 5;
+    ui->todo_y = ui->resistances_y;
+    ui->todo_x = ui->resistances_width + 5;
+    ui->W_todo = derwin(
+        ui->W_main,
+        ui->todo_height, ui->todo_width,
+        ui->todo_y, ui->todo_x
+    );
     
 
     // Panel Creation
@@ -220,13 +231,15 @@ nt_ui_data_draw(NT_UI *ui)
 
     box(ui->W_other, ACS_VLINE, ACS_HLINE);
 
+    box(ui->W_todo, ACS_VLINE, ACS_HLINE);
+
     nt_ui_draw_main_title(ui);
     nt_ui_draw_main_hints(ui, NULL, 0);
 
     // Drawing Resistances State
     nt_ui_draw_title(
         ui->W_resistances, ui->resistances_width,
-        "Resistances", 11, COLOR_RESISTANCES);
+        " Resistances ", 13, COLOR_RESISTANCES);
     nt_ui_draw_list(ui->W_resistances, list_y + 1, list_x, "Shock",
         ui->data->has_shock_resistance,
         's');
@@ -252,7 +265,7 @@ nt_ui_data_draw(NT_UI *ui)
     // Drawing Ability State
     nt_ui_draw_title(
         ui->W_abilities, ui->abilities_width,
-        "Abilities", 9, COLOR_ABILITIES);
+        " Abilities ", 11, COLOR_ABILITIES);
     nt_ui_draw_list(ui->W_abilities, list_y + 1, list_x, "Infravision",
         ui->data->has_infravision,
         'a');
@@ -293,13 +306,18 @@ nt_ui_data_draw(NT_UI *ui)
     // Drawing Other State
     nt_ui_draw_title(
         ui->W_other, ui->other_width,
-        "Misc.", 5, 0);
+        " Misc. ", 7, 0);
     nt_ui_draw_other(ui->W_other, list_y, list_x, "Protection:",
         ui->data->divine_protection,
         'a');
     nt_ui_draw_other(ui->W_other, list_y + 1, list_x, "Last Prayed On:",
         ui->data->last_turn_prayed,
         'b');
+
+    // Drawing ToDo State
+    nt_ui_draw_title(
+        ui->W_todo, ui->todo_width,
+        " Things to be Done if not Already ", 34, 0);
 
     update_panels();
     doupdate();
