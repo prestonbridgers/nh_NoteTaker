@@ -48,8 +48,14 @@ main(int argc, char *argv[])
         }
     }
     free(name);
+
+    nt_todo_add(ui->data, "Test", 0);
+    nt_todo_add(ui->data, "Test 2", 0);
+    nt_todo_print(ui->data);
     
     nt_ui_interact_loop(ui);
+
+    nt_todo_print(ui->data);
 
     nt_data_serialize(ui->data);
 

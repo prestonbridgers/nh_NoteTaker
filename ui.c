@@ -378,6 +378,9 @@ nt_ui_interact_loop(NT_UI *ui) {
                     }
                 }
                 break;
+            case 'c':
+                nt_todo_toggle_complete(ui->data->todo_head, getch());
+                break;
             default:
                 break;
         }

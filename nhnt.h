@@ -14,6 +14,14 @@
 /* BEGIN DATA */
 /*------------*/
 
+typedef struct NT_TODO_T {
+    char *text;
+    char letter;
+    size_t max_len;
+    uint8_t is_complete;
+    struct NT_TODO_T *next;
+} NT_TODO;
+
 typedef struct {
     char *plr_name;
     // Resistances
@@ -40,7 +48,17 @@ typedef struct {
     // Other
     uint16_t divine_protection;
     uint32_t last_turn_prayed;
+    // ToDo List
+    NT_TODO *todo_head;
 } NT_DATA;
+
+NT_TODO* nt_todo_create(char *text, int is_complete, NT_TODO *next);
+uint8_t nt_todo_destroy(NT_TODO *todo);
+uint8_t nt_todo_toggle_complete(NT_TODO *head, char letter);
+uint8_t nt_todo_text_set(NT_TODO *todo, char *text);
+uint8_t nt_todo_print(NT_DATA *d);
+uint8_t nt_todo_add(NT_DATA *data, char *text, uint8_t is_complete);
+uint8_t nt_todo_letter_refresh(NT_TODO *head);
 
 NT_DATA* nt_create(char *plr_name);
 uint8_t nt_destroy(NT_DATA *data);

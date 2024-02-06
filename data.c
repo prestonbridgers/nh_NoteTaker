@@ -35,6 +35,7 @@ nt_create(char *plr_name)
     d->has_warning = 0;
     d->divine_protection = 0;
     d->last_turn_prayed = 0;
+    d->todo_head = NULL;
     return d;
 }
 
@@ -45,6 +46,88 @@ nt_destroy(NT_DATA *data)
        return EXIT_FAILURE;
     }
     free(data);
+    return EXIT_SUCCESS;
+}
+
+NT_TODO*
+nt_todo_create(char *text, int is_complete, NT_TODO *next)
+{
+    NT_TODO *td = calloc(1, sizeof *td);
+    td->max_len = 1024;
+    td->text = calloc(td->max_len, sizeof *td->text);
+    strncpy(td->text, text, td->max_len);
+    td->is_complete = is_complete;
+    td->next = next;
+    return td;
+}
+
+uint8_t
+nt_todo_add(NT_DATA *data, char *text, uint8_t is_complete)
+{
+    NT_TODO *new_head = nt_todo_create(text, is_complete, data->todo_head);
+    data->todo_head = new_head;
+    nt_todo_letter_refresh(data->todo_head);
+    return EXIT_SUCCESS;
+}
+
+uint8_t
+nt_todo_letter_refresh(NT_TODO *head)
+{
+    char letters[] = "abcdefghijklmnopqrstuvwxyz";
+    int count = 0;
+    NT_TODO *cur = head;
+
+    while (cur != NULL) {
+        cur->letter = letters[count];
+        count++;
+        cur = cur->next;
+    }
+    return EXIT_SUCCESS;
+}
+
+uint8_t
+nt_todo_print(NT_DATA *d)
+{
+    NT_TODO *cur = d->todo_head;
+    while (cur != NULL) {
+        if (cur->is_complete) {
+            fprintf(stderr, "[x] %c - %s\n", cur->letter, cur->text);
+        } else {
+            fprintf(stderr, "[ ] %c - %s\n", cur->letter, cur->text);
+        }
+        cur = cur->next;
+    }
+    return EXIT_SUCCESS;
+}
+
+uint8_t
+nt_todo_destroy(NT_TODO *todo)
+{
+    free(todo->text);
+    free(todo);
+    return EXIT_SUCCESS;
+}
+
+uint8_t
+nt_todo_toggle_complete(NT_TODO *head, char letter)
+{
+    NT_TODO *cur = head;
+    while (cur->letter != letter) {
+        cur = cur->next;
+        if (cur == NULL) {
+            return EXIT_FAILURE;
+        }
+    }
+    cur->is_complete = !cur->is_complete;
+    return EXIT_SUCCESS;
+}
+
+uint8_t
+nt_todo_text_set(NT_TODO *todo, char *text)
+{
+    free(todo->text);
+    todo->text = calloc(todo->max_len, sizeof *todo->text);
+    strncpy(todo->text, text, todo->max_len);
     return EXIT_SUCCESS;
 }
 
@@ -108,7 +191,6 @@ nt_data_load(NT_DATA *data, char *filename)
     // Resistances & Abilities
     token = strtok(NULL, "|");
     i = 0;
-    fprintf(stderr, "%s\n", token);
     if (token[i] == '1') { data->has_shock_resistance = 1; } i++;
     if (token[i] == '1') { data->has_fire_resistance = 1; } i++;
     if (token[i] == '1') { data->has_cold_resistance = 1; } i++;
