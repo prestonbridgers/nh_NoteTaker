@@ -12,7 +12,7 @@
   <a href="#license">License</a>
 </p>
 
-![screenshot](./res/nhnt_1.png)
+![screenshot](./res/nhnt_2.png)
 
 ## Key Features
 
