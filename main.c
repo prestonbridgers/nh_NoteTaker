@@ -49,8 +49,11 @@ main(int argc, char *argv[])
     }
     free(name);
 
-    nt_todo_add(ui->data, "Test", 0);
-    nt_todo_add(ui->data, "Test 2", 0);
+    nt_todo_add(ui->data, "Finish Sokoban", 0);
+    nt_todo_add(ui->data, "Create a stash", 0);
+    nt_todo_add(ui->data, "Get MR", 0);
+    nt_todo_add(ui->data, "Get poison resistance", 0);
+    nt_todo_add(ui->data, "Geno L", 0);
     nt_todo_print(ui->data);
     
     nt_ui_interact_loop(ui);

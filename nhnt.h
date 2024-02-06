@@ -146,6 +146,7 @@ uint8_t nt_ui_destroy(NT_UI *ui);
 uint8_t nt_ui_data_draw(NT_UI *ui);
 uint8_t nt_ui_draw_list(WINDOW *win, uint32_t y, uint32_t x, char *text,
     uint32_t has, char letter);
+uint8_t nt_ui_draw_todo(WINDOW *win, uint32_t y, uint32_t x, NT_TODO *td);
 uint8_t nt_ui_draw_other(WINDOW *win, uint32_t y, uint32_t x, char *text,
     uint32_t has, char letter);
 uint8_t nt_ui_interact_loop(NT_UI *ui);

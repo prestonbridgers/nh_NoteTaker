@@ -212,6 +212,25 @@ nt_ui_draw_main_hints(NT_UI *ui, char *text, size_t len)
 }
 
 uint8_t
+nt_ui_draw_todo(WINDOW *win, uint32_t y, uint32_t x, NT_TODO *td)
+{
+    if (td->is_complete) {
+        mvwprintw(
+            win, y, x,
+            "[x] %c - %s", td->letter, td->text
+        );
+    } else {
+        mvwprintw(
+            win, y, x,
+            "[ ] %c - %s", td->letter, td->text
+        );
+    }
+
+
+    return EXIT_SUCCESS;
+}
+
+uint8_t
 nt_ui_data_draw(NT_UI *ui)
 {
     uint8_t list_y = 1;
@@ -289,6 +308,15 @@ nt_ui_data_draw(NT_UI *ui)
     nt_ui_draw_other(ui->W_other, list_y + 1, list_x, "Last Prayed On:",
         ui->data->last_turn_prayed,
         'p');
+
+    // Drawing todo list items
+    NT_TODO* cur = ui->data->todo_head;
+    int y_offset = 1;
+    while (cur != NULL) {
+        nt_ui_draw_todo(ui->W_todo, list_y + y_offset, list_x + ui->other_x - 4, cur);
+        y_offset++;
+        cur = cur->next;
+    }
 
     // Drawing ToDo State
 

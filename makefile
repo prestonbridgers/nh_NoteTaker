@@ -19,3 +19,6 @@ ui.o: ui.c nhnt.h
 clean:
 	@rm *.o
 	@rm $(BIN)
+
+run:
+	@./$(BIN) -n test 2> err.log
