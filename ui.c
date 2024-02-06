@@ -161,7 +161,7 @@ nt_ui_draw_other(WINDOW *win, uint32_t y, uint32_t x, char *text, uint32_t has,
     char letter)
 {
     char buffer[256];
-    snprintf(buffer, 256, "%c - %s %d", letter, text, has);
+    snprintf(buffer, 256, "%c - %s %d      ", letter, text, has);
 
     mvwprintw(
         win, y, x,
@@ -217,29 +217,11 @@ nt_ui_data_draw(NT_UI *ui)
     uint8_t list_y = 1;
     uint8_t list_x = 2;
 
-    // Draw boxes first so nothing overlaps them
-    box(ui->W_main, ACS_VLINE, ACS_HLINE);
-    //box(ui->W_help, ACS_VLINE, ACS_HLINE);
-
-    wattron(ui->W_resistances, COLOR_PAIR(COLOR_RESISTANCES));
-    box(ui->W_resistances, ACS_VLINE, ACS_HLINE);
-    wattroff(ui->W_resistances, COLOR_PAIR(COLOR_RESISTANCES));
-
-    wattron(ui->W_abilities, COLOR_PAIR(COLOR_ABILITIES));
-    box(ui->W_abilities, ACS_VLINE, ACS_HLINE);
-    wattroff(ui->W_abilities, COLOR_PAIR(COLOR_ABILITIES));
-
-    box(ui->W_other, ACS_VLINE, ACS_HLINE);
-
-    box(ui->W_todo, ACS_VLINE, ACS_HLINE);
 
     nt_ui_draw_main_title(ui);
     nt_ui_draw_main_hints(ui, NULL, 0);
 
     // Drawing Resistances State
-    nt_ui_draw_title(
-        ui->W_resistances, ui->resistances_width,
-        " Resistances ", 13, COLOR_RESISTANCES);
     nt_ui_draw_list(ui->W_resistances, list_y + 1, list_x, "Shock",
         ui->data->has_shock_resistance,
         's');
@@ -263,9 +245,6 @@ nt_ui_data_draw(NT_UI *ui)
         'm');
 
     // Drawing Ability State
-    nt_ui_draw_title(
-        ui->W_abilities, ui->abilities_width,
-        " Abilities ", 11, COLOR_ABILITIES);
     nt_ui_draw_list(ui->W_abilities, list_y + 1, list_x, "Infravision",
         ui->data->has_infravision,
         'a');
@@ -304,20 +283,39 @@ nt_ui_data_draw(NT_UI *ui)
         'l');
 
     // Drawing Other State
-    nt_ui_draw_title(
-        ui->W_other, ui->other_width,
-        " Misc. ", 7, 0);
     nt_ui_draw_other(ui->W_other, list_y, list_x, "Protection:",
         ui->data->divine_protection,
-        'a');
+        'd');
     nt_ui_draw_other(ui->W_other, list_y + 1, list_x, "Last Prayed On:",
         ui->data->last_turn_prayed,
-        'b');
+        'p');
 
     // Drawing ToDo State
+
+    // Draw boxes first so nothing overlaps them
+    box(ui->W_main, ACS_VLINE, ACS_HLINE);
+    wattron(ui->W_resistances, COLOR_PAIR(COLOR_RESISTANCES));
+    box(ui->W_resistances, ACS_VLINE, ACS_HLINE);
+    wattroff(ui->W_resistances, COLOR_PAIR(COLOR_RESISTANCES));
+    wattron(ui->W_abilities, COLOR_PAIR(COLOR_ABILITIES));
+    box(ui->W_abilities, ACS_VLINE, ACS_HLINE);
+    wattroff(ui->W_abilities, COLOR_PAIR(COLOR_ABILITIES));
+    box(ui->W_other, ACS_VLINE, ACS_HLINE);
+    box(ui->W_todo, ACS_VLINE, ACS_HLINE);
+
+    // Draw Titles
     nt_ui_draw_title(
         ui->W_todo, ui->todo_width,
         " Things to be Done if not Already ", 34, 0);
+    nt_ui_draw_title(
+        ui->W_other, ui->other_width,
+        " Misc. ", 7, 0);
+    nt_ui_draw_title(
+        ui->W_abilities, ui->abilities_width,
+        " Abilities ", 11, COLOR_ABILITIES);
+    nt_ui_draw_title(
+        ui->W_resistances, ui->resistances_width,
+        " Resistances ", 13, COLOR_RESISTANCES);
 
     update_panels();
     doupdate();
@@ -335,6 +333,17 @@ nt_ui_interact_loop(NT_UI *ui) {
 
     while (is_running) {
         input = getch();
+
+        // Detecting entry of numbers for last turn prayed/divine protection
+        char *numbers = calloc(16, sizeof *numbers);
+        int count = 0;
+        while (input >= '0' && input<= '9') {
+            numbers[count] = input;
+            count++;
+            input = getch();
+        }
+        numbers[count] = 0x0;
+
         switch (input) {
             case 'r':
                 nt_ui_draw_main_hints(ui,
@@ -355,10 +364,25 @@ nt_ui_interact_loop(NT_UI *ui) {
             case 'q':
                 is_running = 0;
                 break;
+            case 'p':
+                {
+                    if (count > 0) {
+                        nt_last_turn_prayed_set(ui->data, atoi(numbers));
+                    }
+                }
+                break;
+            case 'd':
+                {
+                    if (count > 0) {
+                        nt_divine_protection_set(ui->data, atoi(numbers));
+                    }
+                }
+                break;
             default:
                 break;
         }
         nt_ui_data_draw(ui);
+        free(numbers);
     }
     return EXIT_SUCCESS;
 }
