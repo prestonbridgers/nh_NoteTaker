@@ -58,6 +58,7 @@ uint8_t nt_todo_toggle_complete(NT_TODO *head, char letter);
 uint8_t nt_todo_text_set(NT_TODO *todo, char *text);
 uint8_t nt_todo_print(NT_DATA *d);
 uint8_t nt_todo_add(NT_DATA *data, char *text, uint8_t is_complete);
+uint8_t nt_todo_remove(NT_DATA *data, char letter);
 uint8_t nt_todo_letter_refresh(NT_TODO *head);
 
 NT_DATA* nt_create(char *plr_name);

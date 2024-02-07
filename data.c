@@ -62,6 +62,31 @@ nt_todo_create(char *text, int is_complete, NT_TODO *next)
 }
 
 uint8_t
+nt_todo_remove(NT_DATA *data, char letter)
+{
+    NT_TODO *cur = data->todo_head;
+    NT_TODO *prev = cur;
+
+    // Handling case where target is the head
+    if (cur->letter == letter) {
+        data->todo_head = data->todo_head->next;
+        free(cur);
+        return EXIT_SUCCESS;
+    }
+
+    // All other cases
+    while (cur->letter != letter) {
+        prev = cur;
+        cur = cur->next;
+    }
+
+    prev->next = cur->next;
+    free(cur);
+    nt_todo_letter_refresh(data->todo_head);
+    return EXIT_SUCCESS;
+}
+
+uint8_t
 nt_todo_add(NT_DATA *data, char *text, uint8_t is_complete)
 {
     NT_TODO *new_head = nt_todo_create(text, is_complete, data->todo_head);

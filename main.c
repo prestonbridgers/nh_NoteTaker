@@ -55,6 +55,8 @@ main(int argc, char *argv[])
     nt_todo_add(ui->data, "Get poison resistance", 0);
     nt_todo_add(ui->data, "Geno L", 0);
     nt_todo_print(ui->data);
+
+    nt_todo_remove(ui->data, 'a');
     
     nt_ui_interact_loop(ui);
 
