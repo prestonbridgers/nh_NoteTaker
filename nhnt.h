@@ -5,6 +5,7 @@
 #include <ncurses.h>
 #include <string.h>
 #include <panel.h>
+#include <form.h>
 
 #define COLOR_RESISTANCES 1
 #define COLOR_ABILITIES 2
@@ -140,6 +141,18 @@ typedef struct {
     uint32_t todo_width;
     uint32_t todo_y;
     uint32_t todo_x;
+    // ToDo Form
+    PANEL *P_form_todo;
+    WINDOW *W_form_todo;
+    uint32_t W_form_todo_y;
+    uint32_t W_form_todo_x;
+    uint32_t W_form_todo_height;
+    uint32_t W_form_todo_width;
+    FIELD *field_todo[2];
+    FORM *form_todo;
+    int32_t form_todo_width;
+    int32_t form_todo_height;
+
 } NT_UI;
 
 NT_UI* nt_ui_create(NT_DATA *data);
@@ -157,6 +170,7 @@ uint8_t nt_ui_draw_title(WINDOW *win, uint32_t win_width, char *text,
 uint8_t nt_ui_draw_main_title(NT_UI *ui);
 uint8_t nt_ui_draw_main_hints(NT_UI *ui, char *text, size_t len);
 uint8_t nt_ui_toggle_ability(NT_UI *ui, char abil);
+uint8_t nt_ui_add_todo(NT_UI *ui);
 
 uint8_t init_curses(void);
 uint8_t cleanup_curses(void);

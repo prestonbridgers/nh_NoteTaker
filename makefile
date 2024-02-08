@@ -1,5 +1,5 @@
 CC=gcc
-LFLAGS=-lpanel -lncurses
+LFLAGS=-lpanel -lncurses -lform
 CFLAGS=-Wall -g -c
 
 BIN=nhnt

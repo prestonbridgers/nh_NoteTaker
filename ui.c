@@ -101,11 +101,37 @@ nt_ui_create(NT_DATA *data)
         ui->todo_height, ui->todo_width,
         ui->todo_y, ui->todo_x
     );
-    
+
+    // ToDo Form Initialization
+    ui->field_todo[0] = new_field(1, 32, 0, 0, 0, 0);
+    ui->field_todo[1] = NULL;
+
+    set_field_back(ui->field_todo[0], A_UNDERLINE);
+
+    ui->form_todo = new_form(ui->field_todo);
+
+    scale_form(ui->form_todo, &ui->form_todo_height, &ui->form_todo_width);
+    ui->W_form_todo_height = ui->form_todo_height + 4;
+    ui->W_form_todo_width = ui->form_todo_width + 4;
+    ui->W_form_todo_y = (LINES - ui->W_form_todo_height) / 2;
+    ui->W_form_todo_x = (COLS - ui->W_form_todo_width) / 2;
+
+    ui->W_form_todo = newwin(
+        ui->W_form_todo_height, ui->W_form_todo_width,
+        ui->W_form_todo_y, ui->W_form_todo_x
+    );
+
+    set_form_win(ui->form_todo, ui->W_form_todo);
+    set_form_sub(ui->form_todo, derwin(ui->W_form_todo, ui->form_todo_height, ui->form_todo_width, 2, 2));
+
 
     // Panel Creation
     ui->P_help = new_panel(ui->W_help);
     ui->P_main = new_panel(ui->W_main);
+    ui->P_form_todo = new_panel(ui->W_form_todo);
+
+    // Initially hiding the form panel
+    hide_panel(ui->P_form_todo);
 
     return ui;
 }
@@ -330,6 +356,7 @@ nt_ui_data_draw(NT_UI *ui)
     wattroff(ui->W_abilities, COLOR_PAIR(COLOR_ABILITIES));
     box(ui->W_other, ACS_VLINE, ACS_HLINE);
     box(ui->W_todo, ACS_VLINE, ACS_HLINE);
+    box(ui->W_form_todo, ACS_VLINE, ACS_HLINE);
 
     // Draw Titles
     nt_ui_draw_title(
@@ -344,6 +371,9 @@ nt_ui_data_draw(NT_UI *ui)
     nt_ui_draw_title(
         ui->W_resistances, ui->resistances_width,
         " Resistances ", 13, COLOR_RESISTANCES);
+    nt_ui_draw_title(
+        ui->W_form_todo, ui->form_todo_width,
+        " Add ToDo: ", 12, 0);
 
     update_panels();
     doupdate();
@@ -409,12 +439,57 @@ nt_ui_interact_loop(NT_UI *ui) {
             case 'c':
                 nt_todo_toggle_complete(ui->data->todo_head, getch());
                 break;
+            case 't':
+                // Don't know what's going on here... TODO for the rewrite.
+                post_form(ui->form_todo);
+                show_panel(ui->P_form_todo);
+                update_panels();
+                doupdate();
+                nt_ui_add_todo(ui);
+                hide_panel(ui->P_form_todo);
+                update_panels();
+                doupdate();
+                break;
             default:
                 break;
         }
         nt_ui_data_draw(ui);
         free(numbers);
     }
+    return EXIT_SUCCESS;
+}
+
+uint8_t
+nt_ui_add_todo(NT_UI *ui)
+{
+    int ch;
+    char buffer[256];
+    int i = 0;
+    int getting_input = 1;
+
+    while (getting_input) {
+        ch = getch();
+        switch (ch) {
+            case '\n':
+                getting_input = 0;
+                break;
+            default:
+                form_driver(ui->form_todo, ch);
+                buffer[i] = ch;
+                i++;
+                break;
+        }
+
+        update_panels();
+        doupdate();
+    }
+
+    while (i < 256) {
+        buffer[i] = ' ';
+        i++;
+    }
+    buffer[i] = 0x0;
+    nt_todo_add(ui->data, buffer, 0);
     return EXIT_SUCCESS;
 }
 
