@@ -226,8 +226,8 @@ nt_ui_draw_main_hints(NT_UI *ui, char *text, size_t len)
 
     if (text == NULL) {
         mvwprintw(ui->W_main, ui->main_height - 2,
-            (ui->main_width - 55) / 2,
-            "r - toggle resistance  | a - toggle ability |  q - quit");
+            (ui->main_width - 124) / 2,
+            "x - Remove ToDo Entry | t - Add ToDo Entry | c - Toggle ToDo Entry | r - toggle resistance  | a - toggle ability |  q - quit");
     } else {
         mvwprintw(ui->W_main, ui->main_height - 2,
             (ui->main_width - len) / 2,
@@ -403,6 +403,14 @@ nt_ui_interact_loop(NT_UI *ui) {
         numbers[count] = 0x0;
 
         switch (input) {
+            case 'x':
+                nt_ui_draw_main_hints(ui,
+                    "Removing ToDo Entry: Choose an entry",
+                    36);
+                update_panels();
+                doupdate();
+                nt_todo_remove(ui->data, getch());
+                break;
             case 'r':
                 nt_ui_draw_main_hints(ui,
                     "Toggling Resistance: Choose a resistance",
@@ -437,6 +445,11 @@ nt_ui_interact_loop(NT_UI *ui) {
                 }
                 break;
             case 'c':
+                nt_ui_draw_main_hints(ui,
+                    "Toggling ToDo Entry: Choose an entry",
+                    36);
+                update_panels();
+                doupdate();
                 nt_todo_toggle_complete(ui->data->todo_head, getch());
                 break;
             case 't':
@@ -463,14 +476,23 @@ uint8_t
 nt_ui_add_todo(NT_UI *ui)
 {
     int ch;
+    int quit = 0;
     char buffer[256];
     int i = 0;
     int getting_input = 1;
+
+    form_driver(ui->form_todo, REQ_CLR_FIELD);
+    update_panels();
+    doupdate();
 
     while (getting_input) {
         ch = getch();
         switch (ch) {
             case '\n':
+                getting_input = 0;
+                break;
+            case 'q':
+                quit = 1;
                 getting_input = 0;
                 break;
             default:
@@ -489,7 +511,9 @@ nt_ui_add_todo(NT_UI *ui)
         i++;
     }
     buffer[i] = 0x0;
-    nt_todo_add(ui->data, buffer, 0);
+    if (!quit) {
+        nt_todo_add(ui->data, buffer, 0);
+    }
     return EXIT_SUCCESS;
 }
 

@@ -192,6 +192,12 @@ nt_data_serialize(NT_DATA *data)
         data->divine_protection,
         data->last_turn_prayed);
 
+    NT_TODO *cur = data->todo_head;
+    while (cur != NULL) {
+        fprintf(f, "%s|%d\n", cur->text, cur->is_complete);
+        cur = cur->next;
+    }
+
     fclose(f);
     return EXIT_SUCCESS;
 }
@@ -243,6 +249,13 @@ nt_data_load(NT_DATA *data, char *filename)
     // Last turn prayed
     token = strtok(NULL, "|");
     data->last_turn_prayed = atoi(token);
+
+    while (fgets(data_str, 1024, f) != NULL) {
+        token = strtok(data_str, "|");
+        nt_todo_add(data, token, 0);
+        token = strtok(NULL, "|");
+        data->todo_head->is_complete = atoi(token);
+    }
 
     fclose(f);
     return NULL;
