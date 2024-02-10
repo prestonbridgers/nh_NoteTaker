@@ -344,8 +344,6 @@ nt_ui_data_draw(NT_UI *ui)
         cur = cur->next;
     }
 
-    // Drawing ToDo State
-
     // Draw boxes first so nothing overlaps them
     box(ui->W_main, ACS_VLINE, ACS_HLINE);
     wattron(ui->W_resistances, COLOR_PAIR(COLOR_RESISTANCES));
@@ -466,6 +464,7 @@ nt_ui_interact_loop(NT_UI *ui) {
             default:
                 break;
         }
+        werase(ui->W_todo);
         nt_ui_data_draw(ui);
         free(numbers);
     }
@@ -501,7 +500,6 @@ nt_ui_add_todo(NT_UI *ui)
                 form_driver(ui->form_todo, REQ_DEL_PREV);
                 break;
             default:
-                fprintf(stderr, "Player pressed: %d\n", ch);
                 form_driver(ui->form_todo, ch);
                 buffer[i] = ch;
                 i++;
