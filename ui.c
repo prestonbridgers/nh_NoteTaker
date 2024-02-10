@@ -495,7 +495,13 @@ nt_ui_add_todo(NT_UI *ui)
                 quit = 1;
                 getting_input = 0;
                 break;
+            case 263:
+                i--;
+                buffer[i] = '\0';
+                form_driver(ui->form_todo, REQ_DEL_PREV);
+                break;
             default:
+                fprintf(stderr, "Player pressed: %d\n", ch);
                 form_driver(ui->form_todo, ch);
                 buffer[i] = ch;
                 i++;
