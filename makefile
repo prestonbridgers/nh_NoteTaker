@@ -1,24 +1,7 @@
-CC=gcc
-LFLAGS=-lpanel -lncurses -lform
-CFLAGS=-Wall -g -c
-
+BUILD_DIR=./build
 BIN=nhnt
-BUILD_DIR=./build/
 
 default: build
-
-$(BIN): main.o data.o ui.o
-	$(CC) $^ $(LFLAGS) -o $@
-
-main.o: main.c nhnt.h
-	$(CC) $(CFLAGS) $<
-
-data.o: data.c nhnt.h
-	$(CC) $(CFLAGS) $<
-
-ui.o: ui.c nhnt.h
-	$(CC) $(CFLAGS) $<
-
 
 .PHONY: clean
 clean:
