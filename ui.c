@@ -208,7 +208,7 @@ nt_ui_draw_main_title(NT_UI *ui)
 
     wattron(ui->W_main, COLOR_PAIR(COLOR_MAIN_TITLE));
     mvwprintw(ui->W_main, 1, (ui->main_width - 24) / 2,
-        "NetHack NoteTaker v0.1.0");
+        "NetHack NoteTaker v1.0");
     wattroff(ui->W_main, COLOR_PAIR(COLOR_MAIN_TITLE));
 
     return EXIT_SUCCESS;
