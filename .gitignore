@@ -1,6 +1,3 @@
 nhnt
-curt.txt
-valk.txt
-test.txt
-err.log
+build/
 *.o

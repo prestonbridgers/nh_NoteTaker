@@ -3,6 +3,7 @@ LFLAGS=-lpanel -lncurses -lform
 CFLAGS=-Wall -g -c
 
 BIN=nhnt
+BUILD_DIR=./build/
 
 $(BIN): main.o data.o ui.o
 	$(CC) $^ $(LFLAGS) -o $@
@@ -20,5 +21,9 @@ clean:
 	@rm *.o
 	@rm $(BIN)
 
+build:
+	@cmake -B ./build/ -S .
+
 run:
+	@cd $(BUILD_DIR)
 	@./$(BIN) -n test 2> err.log
