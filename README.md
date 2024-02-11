@@ -50,7 +50,11 @@
 
 To clone and run this application, you'll need [Git](https://git-scm.com) and the NCURSES package.
 
-Once these have been installed, clone the repository, run `make` then `./nhnt` to see application usage.
+Once these have been installed, clone the repository, run `make build` then `make run` to see application usage.
+
+See the makefile in the project's root directory for other options.
+
+Copy the binary into `~/.local/bin` with `make install`. Running `nhnt` will print program usage.
 
 ## Credits
 
