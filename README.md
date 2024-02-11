@@ -42,9 +42,9 @@
     * Warning
   * Last Turn Prayed
   * Divine Protection
-* [COMING SOON] Track ToDo List
+* Track ToDo List Entries
   * Add/Remove items
-  * Toggle complete/incomplete
+  * Toggle completeness
 
 ## How To Use
 
