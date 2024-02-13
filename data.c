@@ -69,7 +69,7 @@ nt_todo_remove(NT_DATA *data, char letter)
 
     // Handling case where target is the head
     if (cur->letter == letter) {
-        data->todo_head = NULL;
+        data->todo_head = data->todo_head->next;
         free(cur);
         return EXIT_SUCCESS;
     }
